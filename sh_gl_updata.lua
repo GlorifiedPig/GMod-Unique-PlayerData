@@ -8,18 +8,19 @@
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]--
 
-local updataVersion = 1.0
+local updataVersion = 1.1
 
-if !GlorifiedUPData or GlorifiedUPData.Version < updataVersion then
-
-    GlorifiedUPData = { Version = updataVersion }
+if not GlorifiedUPData or GlorifiedUPData.Version < updataVersion then
+    GlorifiedUPData = {
+        Version = updataVersion
+    }
 
     local plyMeta = FindMetaTable( "Player" )
-    if( !plyMeta ) then return end
+    if not plyMeta then return end
 
     local sql_Query = sql.Query
 
-    if ( !sql.TableExists( "glorifiedupdata" ) ) then
+    if not sql.TableExists( "glorifiedupdata" ) then
         sql_Query( "CREATE TABLE IF NOT EXISTS glorifiedupdata ( key TEXT NOT NULL PRIMARY KEY, value TEXT );" )
     end
 
@@ -31,9 +32,8 @@ if !GlorifiedUPData or GlorifiedUPData.Version < updataVersion then
     function plyMeta:GetUPData( key, default )
         key = Format( "%s[%s]", self:SteamID64(), key )
         local val = sql.QueryValue( "SELECT value FROM glorifiedupdata WHERE key = " .. SQLStr( key ) .. " LIMIT 1" )
-        
-        if ( val == nil ) then return default end
+
+        if val == nil then return default end
         return val
     end
-
 end
